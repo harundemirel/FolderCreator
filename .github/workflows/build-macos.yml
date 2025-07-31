@@ -27,7 +27,7 @@ jobs:
           pyinstaller --windowed --name FolderCreator FolderCreatorGUI_Updated_UI.py
 
       - name: Upload app artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: FolderCreator_mac_app
           path: dist/FolderCreator.app
