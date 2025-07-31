@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: pip install py2app
 
-      - name: Build .app
+      - name: Build .app with icon
         run: |
           mkdir dist
           python3 setup.py py2app
