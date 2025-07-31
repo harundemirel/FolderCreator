@@ -1,44 +1,41 @@
 name: build-macos
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
   build-macos:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install py2app
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install py2app
 
-      - name: Build .app with icon
-        run: |
-          python setup.py py2app
+    - name: Build .app with icon
+      run: |
+        python setup.py py2app
 
-      - name: Create DMG
-        run: |
-          if [ -d "dist/FolderCreator.app" ]; then
-            hdiutil create -volname FolderCreator -srcfolder dist/FolderCreator.app -ov -format UDZO FolderCreator.dmg
-          else
-            echo "❌ .app dosyası bulunamadı!"
-            ls dist || true
-            exit 1
-          fi
+    - name: Create DMG
+      run: |
+        if [ -d "dist/FolderCreatorGUI_Updated_UI.app" ]; then
+          hdiutil create -volname FolderCreator -srcfolder dist/FolderCreatorGUI_Updated_UI.app -ov -format UDZO FolderCreator.dmg
+        else
+          echo ".app dosyası bulunamadı!"
+          ls dist/
+          exit 1
+        fi
 
-      - name: Upload DMG
-        uses: actions/upload-artifact@v4
-        with:
-          name: FolderCreator
-          path: FolderCreator.dmg
+    - name: Upload DMG
+      uses: actions/upload-artifact@v4
+      with:
+        name: FolderCreator.dmg
+        path: FolderCreator.dmg
