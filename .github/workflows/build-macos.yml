@@ -1,13 +1,13 @@
-name: Build macOS .app
+name: Build macOS App with DMG
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build-macos:
     runs-on: macos-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -18,16 +18,19 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller
+        run: pip install py2app
 
-      - name: Build app
+      - name: Build .app
         run: |
-          pyinstaller --onefile --windowed FolderCreatorGUI_Updated_UI.py
+          mkdir dist
+          python3 setup.py py2app
 
-      - name: Upload artifact
+      - name: Create DMG
+        run: |
+          hdiutil create -volname FolderCreator -srcfolder dist/FolderCreator.app -ov -format UDZO FolderCreator.dmg
+
+      - name: Upload DMG
         uses: actions/upload-artifact@v4
         with:
-          name: FolderCreator_mac_app
-          path: dist/FolderCreatorGUI_Updated_UI
+          name: FolderCreator_DMG
+          path: FolderCreator.dmg
