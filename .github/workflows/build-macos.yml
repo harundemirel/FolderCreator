@@ -2,32 +2,32 @@ name: Build macOS .app
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
   build-macos:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.10
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
-          pip3 install pyinstaller
+          python -m pip install --upgrade pip
+          pip install pyinstaller
 
-      - name: Build .app
+      - name: Build app
         run: |
-          pyinstaller --windowed --name FolderCreator FolderCreatorGUI_Updated_UI.py
+          pyinstaller --onefile --windowed FolderCreatorGUI_Updated_UI.py
 
-      - name: Upload app artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: FolderCreator_mac_app
-          path: dist/FolderCreator.app
+          path: dist/FolderCreatorGUI_Updated_UI
